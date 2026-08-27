@@ -37,6 +37,7 @@ services:
       SESSION_SECRET: ${SESSION_SECRET}
       ADMIN_USERNAME: ${ADMIN_USERNAME}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      SECURE_COOKIE: ${SECURE_COOKIE:-false}
       TZ: Asia/Shanghai
     ports:
       - "3000:3000"

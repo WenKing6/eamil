@@ -25,7 +25,7 @@ app.use(session({
   cookie: {
     httpOnly: true,
     sameSite: 'strict',
-    secure: false, // 生产建议配合 Nginx HTTPS 设为 true
+    secure: process.env.SECURE_COOKIE === 'true', // 生产建议配合 Nginx HTTPS 设为 true
     maxAge: 7 * 24 * 3600 * 1000,
   },
 }));
