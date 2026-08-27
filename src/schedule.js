@@ -40,19 +40,20 @@ function getNextRunTime(task, from) {
     }
     case 'monthly': {
       let targetDay = Number(task.day_of_month);
-      // 从下个月开始查找（当月创建/到期不触发当月），无效日顺延到下个有效月份
+      // 标准语义：当月有效则当月触发，否则顺延到下一个有效月份
       let candidate = atHM(from, task.time_of_day);
-      candidate.setDate(1);
-      candidate.setMonth(candidate.getMonth() + 1);
       for (let i = 0; i < 48; i++) {
         const dim = daysInMonth(candidate.getFullYear(), candidate.getMonth());
         if (targetDay > dim) {
+          candidate.setDate(1);
           candidate.setMonth(candidate.getMonth() + 1);
           continue;
         }
         const d = new Date(candidate);
         d.setDate(targetDay);
-        return d;
+        if (d.getTime() > from.getTime()) return d;
+        candidate.setDate(1);
+        candidate.setMonth(candidate.getMonth() + 1);
       }
       return null; // 48 个月内找不到（理论不会发生）
     }

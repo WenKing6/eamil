@@ -438,12 +438,20 @@ test('weekly 返回下一个匹配的星期', () => {
   assert.strictEqual(next.getDate(), dt('2026-08-31').getDate());
 });
 
-test('monthly 返回下一个匹配的日期，无效日顺延月份', () => {
+test('monthly 当月有效则当月触发，无效日顺延月份', () => {
   const t = { type: 'monthly', time_of_day: '09:00', day_of_month: 31 };
-  // 2026-08-27 起：下个月(9月)无31日，应到 10-31
+  // 2026-08-27 起：本月(8月)有31日且未到点 → 08-31
   const next = getNextRunTime(t, dt('2026-08-27 00:00:00'));
   assert.strictEqual(next.getDate(), 31);
+  assert.strictEqual(next.getMonth(), 7); // 8月
+});
+
+test('monthly 当月无该日时顺延到下一个有效月份', () => {
+  const t = { type: 'monthly', time_of_day: '09:00', day_of_month: 31 };
+  // 2026-09-01 起：9月无31日 → 应到 10-31
+  const next = getNextRunTime(t, dt('2026-09-01 00:00:00'));
   assert.strictEqual(next.getMonth(), 9); // 10月
+  assert.strictEqual(next.getDate(), 31);
 });
 
 test('daily 未设置 time_of_day 时报错', () => {
