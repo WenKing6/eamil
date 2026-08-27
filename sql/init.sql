@@ -1,0 +1,52 @@
+-- 建库（Docker 环境下 MYSQL_DATABASE 已自动创建，此处确保幂等）
+CREATE DATABASE IF NOT EXISTS reminder_app
+  DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+USE reminder_app;
+
+CREATE TABLE IF NOT EXISTS admin (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(64) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS reminders (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(200) NOT NULL,
+  content TEXT NOT NULL,
+  type ENUM('one_time','daily','weekly','monthly') NOT NULL,
+  trigger_time DATETIME NULL,              -- 单次：完整时间
+  time_of_day VARCHAR(5) NOT NULL DEFAULT '09:00', -- 周期：HH:mm
+  weekday TINYINT UNSIGNED NULL,           -- weekly: 0(周日)-6
+  day_of_month TINYINT UNSIGNED NULL,      -- monthly: 1-31
+  enabled TINYINT(1) NOT NULL DEFAULT 1,
+  next_run_at DATETIME NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_next_run (enabled, next_run_at)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS send_logs (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  reminder_id INT UNSIGNED NOT NULL,
+  sent_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  status ENUM('success','failed') NOT NULL,
+  error VARCHAR(500) NULL,
+  INDEX idx_reminder (reminder_id),
+  CONSTRAINT fk_logs_reminder FOREIGN KEY (reminder_id)
+    REFERENCES reminders(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS settings (
+  id TINYINT UNSIGNED PRIMARY KEY DEFAULT 1,
+  smtp_host VARCHAR(255) NOT NULL DEFAULT '',
+  smtp_port INT UNSIGNED NOT NULL DEFAULT 465,
+  smtp_user VARCHAR(255) NOT NULL DEFAULT '',
+  smtp_pass_encrypted TEXT NULL,           -- AES-256-GCM 密文
+  sender_name VARCHAR(100) NOT NULL DEFAULT '',
+  recipient_email VARCHAR(255) NOT NULL DEFAULT '',
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+INSERT INTO settings (id) VALUES (1) ON DUPLICATE KEY UPDATE id = id;
