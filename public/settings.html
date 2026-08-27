@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>系统设置 - 自动邮件提醒</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+  <div class="topbar">
+    <h2 style="margin:0">系统设置</h2>
+    <div class="nav">
+      <a href="/index.html">提醒</a>
+      <a href="/logs.html">日志</a>
+      <a href="/settings.html" class="active">设置</a>
+      <a href="#" id="logoutBtn">退出</a>
+    </div>
+  </div>
+  <div class="card">
+    <h3 style="margin:0 0 4px">SMTP 邮件配置</h3>
+    <p class="sub" style="color:var(--muted);font-size:13px;margin:0 0 8px">
+      163：smtp.163.com:465 | QQ：smtp.qq.com:465（均用授权码，非登录密码）
+    </p>
+    <label>SMTP 服务器</label>
+    <input class="input" id="s-host" placeholder="smtp.qq.com">
+    <label>端口</label>
+    <input class="input" id="s-port" type="number" placeholder="465">
+    <label>发件邮箱</label>
+    <input class="input" id="s-user" placeholder="you@qq.com">
+    <label>授权码（留空则不修改）</label>
+    <input class="input" id="s-pass" type="password" placeholder="已保存为 ***" autocomplete="new-password">
+    <label>发件人名称</label>
+    <input class="input" id="s-name" placeholder="自动提醒">
+    <label>收件邮箱（所有提醒发往此处）</label>
+    <input class="input" id="s-recipient" placeholder="receiver@example.com">
+    <div class="row" style="margin-top:20px">
+      <button class="btn" id="testBtn">发送测试邮件</button>
+      <button class="btn btn-primary" id="saveBtn">保存设置</button>
+    </div>
+  </div>
+</div>
+<div class="toast-wrap"></div>
+<script src="/js/api.js"></script>
+<script src="/js/settings.js"></script>
+</body>
+</html>

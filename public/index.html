@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>提醒管理 - 自动邮件提醒</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+  <div class="topbar">
+    <h2 style="margin:0">提醒管理</h2>
+    <div class="nav">
+      <a href="/index.html" class="active">提醒</a>
+      <a href="/logs.html">日志</a>
+      <a href="/settings.html">设置</a>
+      <a href="#" id="logoutBtn">退出</a>
+    </div>
+  </div>
+  <div class="card" style="display:flex;justify-content:flex-end">
+    <button class="btn btn-primary" id="addBtn">+ 新建提醒</button>
+  </div>
+  <div class="card">
+    <div id="listWrap"><div class="empty">加载中…</div></div>
+  </div>
+</div>
+
+<!-- 新建/编辑弹窗 -->
+<div class="modal-mask" id="modal" style="display:none">
+  <div class="modal">
+    <h3 id="modalTitle" style="margin:0 0 4px">新建提醒</h3>
+    <label>标题</label>
+    <input class="input" id="f-title" maxlength="200">
+    <label>内容</label>
+    <textarea class="input" id="f-content" rows="4" maxlength="2000"></textarea>
+    <label>类型</label>
+    <select class="input" id="f-type">
+      <option value="daily">每天</option>
+      <option value="weekly">每周</option>
+      <option value="monthly">每月</option>
+      <option value="one_time">单次</option>
+    </select>
+    <div id="periodFields">
+      <label>时间 (HH:mm)</label>
+      <input class="input" id="f-time" placeholder="09:00">
+    </div>
+    <div id="weekField" style="display:none">
+      <label>星期</label>
+      <select class="input" id="f-weekday">
+        <option value="1">周一</option><option value="2">周二</option><option value="3">周三</option>
+        <option value="4">周四</option><option value="5">周五</option><option value="6">周六</option>
+        <option value="0">周日</option>
+      </select>
+    </div>
+    <div id="monthField" style="display:none">
+      <label>每月第几天 (1-31)</label>
+      <input class="input" id="f-day" type="number" min="1" max="31">
+    </div>
+    <div id="onceField" style="display:none">
+      <label>触发时间 (YYYY-MM-DD HH:mm:ss)</label>
+      <input class="input" id="f-once" placeholder="2026-09-01 10:00:00">
+    </div>
+    <div class="row" style="margin-top:20px">
+      <button class="btn" id="cancelBtn">取消</button>
+      <button class="btn btn-primary" id="saveBtn">保存</button>
+    </div>
+  </div>
+</div>
+<div class="toast-wrap"></div>
+<script src="/js/api.js"></script>
+<script src="/js/reminders.js"></script>
+</body>
+</html>
