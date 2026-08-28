@@ -13,6 +13,7 @@ const logsRoutes = require('./routes/logs');
 const settingsRoutes = require('./routes/settings');
 
 const app = express();
+app.set('trust proxy', 1); // Nginx 反代场景下信任第一跳代理，express-rate-limit 才能正确解析 X-Forwarded-For
 app.disable('x-powered-by');
 app.use(helmet({ contentSecurityPolicy: false })); // 静态页内联样式，禁用 CSP 默认值以简化
 app.use(express.json({ limit: '100kb' }));
