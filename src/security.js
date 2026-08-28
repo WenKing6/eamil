@@ -4,7 +4,9 @@ const { body, validationResult } = require('express-validator');
 // ---- 会话鉴权 ----
 function requireAuth(req, res, next) {
   if (req.session && req.session.admin) return next();
-  if (req.path.startsWith('/api/')) {
+  // 注意：在 app.use('/api/xxx', requireAuth, ...) 中挂载时，Express 会移除挂载前缀，
+  // 导致 req.path 变为剩余部分（如 '/'）。必须用 req.originalUrl（完整原始路径）判断。
+  if (req.originalUrl.startsWith('/api/')) {
     return res.status(401).json({ ok: false, message: '未登录或会话已过期' });
   }
   return res.redirect('/login.html');
