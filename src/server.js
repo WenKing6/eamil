@@ -43,6 +43,11 @@ app.use('/api/settings', requireAuth, settingsRoutes);
 
 // 静态页面（页面级路由需登录）
 app.use('/login.html', express.static(path.join(__dirname, '..', 'public', 'login.html')));
+// 根路径：未登录跳登录页，已登录跳首页（置于静态托管前，避免 index.html 被直接服务）
+app.get('/', (req, res) => {
+  if (req.session && req.session.admin) return res.redirect('/index.html');
+  return res.redirect('/login.html');
+});
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // 其余页面重定向到登录
