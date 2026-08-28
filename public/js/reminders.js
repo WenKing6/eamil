@@ -6,7 +6,7 @@ function renderTypeInfo(t) {
   if (t.type === 'daily') return t.time_of_day;
   if (t.type === 'weekly') return `周${'日一二三四五六'[t.weekday]} ${t.time_of_day}`;
   if (t.type === 'monthly') return `每月${t.day_of_month}日 ${t.time_of_day}`;
-  return t.trigger_time;
+  return fmtDateTime(t.trigger_time);
 }
 
 async function loadList() {
@@ -21,7 +21,7 @@ async function loadList() {
           <td><b>${esc(t.title)}</b></td>
           <td>${esc(renderTypeInfo(t))}</td>
           <td><span class="badge ${t.enabled ? 'badge-on' : 'badge-off'}">${t.enabled ? '启用' : '停用'}</span></td>
-          <td style="color:var(--muted)">${t.next_run_at ? esc(String(t.next_run_at).replace('T', ' ')) : '—'}</td>
+          <td style="color:var(--muted)">${t.next_run_at ? esc(fmtDateTime(t.next_run_at)) : '—'}</td>
           <td>
             <button class="btn" data-act="edit" data-id="${t.id}">编辑</button>
             <button class="btn" data-act="toggle" data-id="${t.id}">${t.enabled ? '停用' : '启用'}</button>
@@ -85,7 +85,7 @@ async function openModal(id) {
     document.getElementById('f-time').value = t.time_of_day || '09:00';
     document.getElementById('f-weekday').value = String(t.weekday ?? 1);
     document.getElementById('f-day').value = t.day_of_month || 1;
-    document.getElementById('f-once').value = (t.trigger_time || '').replace('T', ' ');
+    document.getElementById('f-once').value = fmtDateTime(t.trigger_time);
   } else {
     editingId = null;
     document.getElementById('modalTitle').textContent = '新建提醒';

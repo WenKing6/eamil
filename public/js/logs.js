@@ -21,7 +21,7 @@ async function loadLogs() {
       <tbody>${data.map((l) => `
         <tr>
           <td>${esc(l.title || '—')}</td>
-          <td style="color:var(--muted)">${esc(String(l.sent_at).replace('T', ' '))}</td>
+          <td style="color:var(--muted)">${esc(fmtDateTime(l.sent_at))}</td>
           <td><span class="badge ${l.status === 'success' ? 'badge-on' : 'badge-fail'}">${l.status === 'success' ? '成功' : '失败'}</span></td>
           <td style="color:var(--muted);max-width:280px">${esc(l.error || '')}</td>
         </tr>`).join('')}

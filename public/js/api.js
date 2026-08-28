@@ -25,3 +25,13 @@ function toast(message, type = 'success') {
 function esc(s) {
   return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
+
+// 后端返回的是 UTC ISO 字符串（如 2026-09-02 12:00:00.000Z），
+// 这里统一解析并格式化为浏览器本地时间（北京时间）：YYYY-MM-DD HH:mm
+function fmtDateTime(v) {
+  if (!v) return '';
+  const d = new Date(v);
+  if (isNaN(d.getTime())) return String(v);
+  const p = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+}
